@@ -30,6 +30,7 @@
         <a href="#epg">EPG</a>
         <a href="#dvr">DVR</a>
         <a href="#plans">Plans</a>
+        <a href="#media">Media</a>
       </nav>
       <button class="primary-btn" id="openRegister">Register</button>
     </header>
@@ -49,8 +50,8 @@
           </div>
           <div class="stats-grid">
             <div>
-              <strong>23</strong>
-              <span>National channels</span>
+              <strong>60+</strong>
+              <span>Channels</span>
             </div>
             <div>
               <strong>2000s-2020s</strong>
@@ -68,11 +69,11 @@
             <span class="status-live">● Live</span>
           </div>
           <div class="tuner-display">
-            <div class="channel-logo">ABC</div>
+            <div class="channel-logo">CNN</div>
             <div>
               <p class="mini-label">Now broadcasting</p>
-              <h3>Good Morning America</h3>
-              <small>ABC | KABC | 7:00 AM</small>
+              <h3>CNN News Central</h3>
+              <small>CNN | Cable | 10:00 AM</small>
             </div>
           </div>
           <div class="tuner-list" id="tunerList"></div>
@@ -130,6 +131,30 @@
           </label>
         </div>
         <div class="schedule-grid" id="scheduleGrid"></div>
+      </section>
+
+      <section id="media" class="card media-section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Internet Archive Streaming</p>
+            <h2>Play public archive media</h2>
+          </div>
+        </div>
+
+        <div class="media-toolbar">
+          <input id="mediaSearchInput" type="search" placeholder="Search archive media (e.g. CNN, NBC News, ESPN, ABC)" />
+          <button id="mediaSearchBtn" class="primary-btn">Search archive</button>
+        </div>
+
+        <div class="media-player-wrap">
+          <video id="archiveVideo" controls playsinline></video>
+          <div id="archiveMediaInfo" class="media-info">
+            <p class="eyebrow">No selection yet</p>
+            <h3>Choose a public archive video to play.</h3>
+          </div>
+        </div>
+
+        <div id="archiveResults" class="archive-results"></div>
       </section>
 
       <section id="dvr" class="dvr-layout">
@@ -196,25 +221,6 @@
         </form>
       </div>
     </div>
-
-    <template id="programCardTemplate">
-      <article class="archive-card card">
-        <div class="archive-meta-row">
-          <span class="network-pill"></span>
-          <span class="year-pill"></span>
-        </div>
-        <h3></h3>
-        <p class="description"></p>
-        <div class="archive-meta">
-          <span class="channel"></span>
-          <span class="date"></span>
-        </div>
-        <div class="archive-actions">
-          <button class="secondary-btn record-btn">Record</button>
-          <button class="ghost-btn">Watch</button>
-        </div>
-      </article>
-    </template>
 
     <script src="app.js"></script>
   </body>

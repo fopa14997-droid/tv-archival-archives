@@ -901,6 +901,11 @@ const recordingQueue = document.getElementById("recordingQueue");
 const tunerList = document.getElementById("tunerList");
 const registerPlanSelect = document.getElementById("registerPlanSelect");
 const registerModal = document.getElementById("registerModal");
+const mediaSearchInput = document.getElementById("mediaSearchInput");
+const mediaSearchBtn = document.getElementById("mediaSearchBtn");
+const archiveResults = document.getElementById("archiveResults");
+const archiveVideo = document.getElementById("archiveVideo");
+const archiveMediaInfo = document.getElementById("archiveMediaInfo");
 
 const tunerChannels = [
   { name: "ABC", freq: "Ch. 7", status: "HD" },
@@ -1263,6 +1268,95 @@ function handleRegistration(event) {
   alert(`Welcome to Live TV Archives, ${account.fullName}! Your ${account.plan} plan is active.`);
 }
 
+async function fetchArchiveMedia(query) {
+  const q = encodeURIComponent(query.trim() || "cnn news");
+  const url = `https://archive.org/advancedsearch.php?q=${q}&fl[]=identifier,title,description,mediatype,collection&rows=8&output=json`;
+
+  try {
+    const response = await fetch(url, { mode: "cors" });
+    if (!response.ok) {
+      throw new Error(`Archive request failed: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const docs = (data?.response?.docs || []).filter((doc) => doc.identifier && doc.mediatype === "movies");
+
+    if (!docs.length) {
+      throw new Error("No public Internet Archive media was found for that query.");
+    }
+
+    return docs;
+  } catch (error) {
+    console.error(error);
+    archiveResults.innerHTML = `<div class="empty-state">Unable to fetch public Internet Archive results right now. Try a broader search such as “CNN”, “NBC News”, or “ABC news”.</div>`;
+    return [];
+  }
+}
+
+async function loadArchiveStream(identifier) {
+  const metaUrl = `https://archive.org/metadata/${identifier}`;
+
+  const response = await fetch(metaUrl, { mode: "cors" });
+  if (!response.ok) {
+    throw new Error(`Unable to fetch metadata for ${identifier}`);
+  }
+
+  const meta = await response.json();
+  const files = meta?.files || [];
+  const streamFile = files.find((file) => /\.(mp4|m4v|webm|ogv)$/i.test(file.name));
+
+  if (!streamFile) {
+    throw new Error(`No playable media file found for ${identifier}`);
+  }
+
+  return {
+    src: `https://archive.org/download/${identifier}/${streamFile.name}`,
+    title: meta.metadata?.title || identifier,
+    description: meta.metadata?.description || "Public Internet Archive media",
+  };
+}
+
+function renderArchiveResults(items) {
+  archiveResults.innerHTML = items
+    .map(
+      (item) => `
+        <button class="archive-result" data-archive-id="${item.identifier}">
+          <strong>${item.title || item.identifier}</strong>
+          <small>${item.collection || "Internet Archive"}</small>
+        </button>
+      `
+    )
+    .join("");
+
+  document.querySelectorAll("[data-archive-id]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const id = button.dataset.archiveId;
+      try {
+        const stream = await loadArchiveStream(id);
+        archiveVideo.src = stream.src;
+        archiveVideo.play();
+        archiveMediaInfo.innerHTML = `
+          <p class="eyebrow">Playing public archive clip</p>
+          <h3>${stream.title}</h3>
+          <p>${stream.description}</p>
+        `;
+      } catch (error) {
+        console.error(error);
+        archiveMediaInfo.innerHTML = `
+          <p class="eyebrow">Playback issue</p>
+          <h3>Unable to load media for this archive item.</h3>
+        `;
+      }
+    });
+  });
+}
+
+async function searchArchiveMedia() {
+  const query = mediaSearchInput.value.trim() || "CNN ABC NBC MSNBC ESPN news";
+  const items = await fetchArchiveMedia(query);
+  renderArchiveResults(items);
+}
+
 function initialize() {
   initFilters();
   renderArchiveCards();
@@ -1306,6 +1400,14 @@ function initialize() {
   });
 
   document.getElementById("registerForm").addEventListener("submit", handleRegistration);
+  mediaSearchBtn.addEventListener("click", searchArchiveMedia);
+  mediaSearchInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      searchArchiveMedia();
+    }
+  });
+
+  searchArchiveMedia();
 }
 
 initialize();

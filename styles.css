@@ -590,6 +590,66 @@ input[type="password"] {
   width: 100%;
 }
 
+.media-section {
+  margin-top: 42px;
+  padding: 24px;
+}
+
+.media-toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.media-player-wrap {
+  display: grid;
+  grid-template-columns: 1.5fr 0.85fr;
+  gap: 20px;
+  align-items: start;
+}
+
+#archiveVideo {
+  width: 100%;
+  max-height: 420px;
+  border-radius: 18px;
+  background: #000;
+  border: 1px solid var(--line);
+}
+
+.media-info {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.media-info h3 {
+  margin-top: 10px;
+  font-size: 1.4rem;
+}
+
+.archive-results {
+  margin-top: 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.archive-result {
+  width: 100%;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: var(--text);
+  display: grid;
+  gap: 4px;
+}
+
+.archive-result small {
+  color: var(--muted);
+}
+
 .hidden {
   display: none !important;
 }
@@ -647,7 +707,8 @@ input[type="password"] {
   .dvr-layout,
   .schedule-grid,
   .archive-grid,
-  .plans-grid {
+  .plans-grid,
+  .media-player-wrap {
     grid-template-columns: 1fr;
   }
 
@@ -656,7 +717,8 @@ input[type="password"] {
   }
 
   .archive-controls,
-  .section-header {
+  .section-header,
+  .media-toolbar {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -671,7 +733,8 @@ input[type="password"] {
   .timeline-card,
   .dvr-card,
   .recordings-card,
-  .plan-card {
+  .plan-card,
+  .media-section {
     padding: 16px;
   }
 

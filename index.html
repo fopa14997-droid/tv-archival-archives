@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Live TV Archives</title>
+    <meta
+      name="description"
+      content="Live TV Archive network with broadcast schedules, DVR, tuner, archive browsing, and premium plans."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand-wrap">
+        <div class="brand-mark">TV</div>
+        <div>
+          <p class="eyebrow">Broadcast Archive</p>
+          <h1>Live TV Archives</h1>
+        </div>
+      </div>
+      <nav class="main-nav">
+        <a href="#archive">Archive</a>
+        <a href="#epg">EPG</a>
+        <a href="#dvr">DVR</a>
+        <a href="#plans">Plans</a>
+      </nav>
+      <button class="primary-btn" id="openRegister">Register</button>
+    </header>
+
+    <main>
+      <section class="hero card">
+        <div class="hero-copy">
+          <span class="chip">Live + Archive</span>
+          <h2>American broadcast heritage, preserved by the minute.</h2>
+          <p>
+            Browse archival TV schedules from 2000s through the present, tune local and national
+            channels, view full broadcast-day timelines, and record programming to your personal DVR.
+          </p>
+          <div class="hero-actions">
+            <button class="primary-btn" data-scroll="#archive">Explore archives</button>
+            <button class="secondary-btn" data-scroll="#dvr">Open DVR</button>
+          </div>
+          <div class="stats-grid">
+            <div>
+              <strong>23</strong>
+              <span>National channels</span>
+            </div>
+            <div>
+              <strong>2000s-2020s</strong>
+              <span>Reference archive</span>
+            </div>
+            <div>
+              <strong>24/7</strong>
+              <span>Broadcast timeline</span>
+            </div>
+          </div>
+        </div>
+        <div class="tuner-panel">
+          <div class="panel-head">
+            <span>Built-in TV tuner</span>
+            <span class="status-live">● Live</span>
+          </div>
+          <div class="tuner-display">
+            <div class="channel-logo">ABC</div>
+            <div>
+              <p class="mini-label">Now broadcasting</p>
+              <h3>Good Morning America</h3>
+              <small>ABC | KABC | 7:00 AM</small>
+            </div>
+          </div>
+          <div class="tuner-list" id="tunerList"></div>
+          <button class="ghost-btn" id="scanTuner">Scan local channels</button>
+        </div>
+      </section>
+
+      <section id="archive" class="archive-section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Archives</p>
+            <h2>Search and browse broadcast archives</h2>
+          </div>
+          <div class="archive-controls">
+            <label>
+              <span>Year</span>
+              <select id="yearFilter">
+                <option value="all">All years</option>
+                <option value="2000s">2000s</option>
+                <option value="2010s">2010s</option>
+                <option value="2020s">2020s</option>
+                <option value="present">Present</option>
+              </select>
+            </label>
+            <label>
+              <span>Network</span>
+              <select id="networkFilter">
+                <option value="all">All networks</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="search-card card">
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="Search by title, network, or date (e.g., NBC Nightly News, ABC, 2024-09-22)"
+            aria-label="Search archive metadata"
+          />
+        </div>
+
+        <div class="archive-grid" id="archiveGrid"></div>
+      </section>
+
+      <section id="epg" class="card timeline-card">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">EPG</p>
+            <h2>Full broadcast day</h2>
+          </div>
+          <label class="date-picker-wrap">
+            <span>Broadcast date</span>
+            <input type="date" id="datePicker" />
+          </label>
+        </div>
+        <div class="schedule-grid" id="scheduleGrid"></div>
+      </section>
+
+      <section id="dvr" class="dvr-layout">
+        <div class="card dvr-card">
+          <div class="section-header compact">
+            <div>
+              <p class="eyebrow">DVR</p>
+              <h2>Record and download</h2>
+            </div>
+          </div>
+          <div id="recordingQueue"></div>
+        </div>
+        <aside class="card recordings-card">
+          <div class="section-header compact">
+            <div>
+              <p class="eyebrow">My recordings</p>
+              <h2>Stored programs</h2>
+            </div>
+          </div>
+          <div id="recordingsList"></div>
+        </aside>
+      </section>
+
+      <section id="plans" class="plans-section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Plans</p>
+            <h2>Free access and premium archive perks</h2>
+          </div>
+        </div>
+        <div class="plans-grid" id="plansGrid"></div>
+      </section>
+    </main>
+
+    <div class="modal hidden" id="registerModal" aria-hidden="true">
+      <div class="modal-backdrop" data-close-modal="true"></div>
+      <div class="modal-card">
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">Registration</p>
+            <h3>Create account</h3>
+          </div>
+          <button class="close-btn" id="closeRegister" aria-label="Close registration">×</button>
+        </div>
+
+        <form id="registerForm">
+          <label>
+            <span>Full name</span>
+            <input type="text" name="fullName" required placeholder="Jamie Rivera" />
+          </label>
+          <label>
+            <span>Email</span>
+            <input type="email" name="email" required placeholder="jamie@example.com" />
+          </label>
+          <label>
+            <span>Password</span>
+            <input type="password" name="password" required placeholder="••••••••" />
+          </label>
+          <label>
+            <span>Select plan</span>
+            <select name="plan" id="registerPlanSelect"></select>
+          </label>
+          <button type="submit" class="primary-btn wide">Create my archive account</button>
+        </form>
+      </div>
+    </div>
+
+    <template id="programCardTemplate">
+      <article class="archive-card card">
+        <div class="archive-meta-row">
+          <span class="network-pill"></span>
+          <span class="year-pill"></span>
+        </div>
+        <h3></h3>
+        <p class="description"></p>
+        <div class="archive-meta">
+          <span class="channel"></span>
+          <span class="date"></span>
+        </div>
+        <div class="archive-actions">
+          <button class="secondary-btn record-btn">Record</button>
+          <button class="ghost-btn">Watch</button>
+        </div>
+      </article>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
